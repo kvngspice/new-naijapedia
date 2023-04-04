@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Word</title>
+</head>
+<body>
+    <h1>Add Word</h1>
+    <form id="add-definition-form">
+        <input type="text" id="word" placeholder="Word" required>
+        <input type="text" id="definition" placeholder="Definition" required>
+        <input type="text" id="use-in-sentence" placeholder="Use in a sentence" required>
+        <button type="button" onclick="addDefinition()">Add Definition</button>
+    </form>
+    <div id="add-definition-result"></div>
+    
+    <button onclick="window.location.href='index.html'">Back to Dictionary</button>
+   
+</body>
+</html>

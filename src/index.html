@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Dictionary</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.3/html2canvas.min.js"></script>
+
+</head>
+<body>
+    <header>
+        <div class="logo">
+          <img src="https://res.cloudinary.com/dw7jddxer/image/upload/v1680580177/logo_wytony.png" />
+        </div>
+        <div class="searchcontainer"> <input type="text" id="search" placeholder="Search a word...">
+    <button onclick="searchWord()">Search</button>
+    <!-- Add this line within the body tag, below the share buttons div -->
+<button onclick="window.location.href='add-word.html'">Add Word</button> </div>
+        <nav>
+          <ul>
+            <li><a href="add-word.html">About Us</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+        
+      </header>
+      
+    
+    
+
+    <div class="main-content"> <div class="result-container"><div id="result"></div>
+    <!-- Add these lines within the body tag, below the result div -->
+<div id="share-buttons">
+    <button onclick="share('twitter')">Share on Twitter</button>
+    <!-- Add this line after the "Search" button -->
+<button id="download-share" onclick="downloadAndShare()">Download & Share</button>
+
+</div>
+</div>
+</div>
+<div id="right-sidebar">
+    <h2>Featured Words</h2>
+    <div id="featured-words"></div>
+</div>
+
+    
+   
+
+</body>
+</html>
