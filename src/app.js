@@ -1,6 +1,24 @@
 import './style.css'
 
 import dictionary from './dictionary';
+import showPopup from './showPopup';
+
+document.getElementById('shareToTwitter').addEventListener('click', function() {
+    const resultDiv = document.getElementById('result');
+    const textToShare = resultDiv.innerText;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${textToShare}`;
+    window.open(twitterUrl, '_blank');
+});
+
+getTerms();
+
+document.getElementById('download-share').addEventListener('click', () => {
+    downloadAndShare();
+});
+
+function addWord() {
+
+}
  
 /*Object.keys(dictionary).forEach((key, index) => {
     console.log(`${key} is at index ${index}`);
@@ -92,57 +110,59 @@ function findRelatedWords(searchedWord) {
     return relatedWords;
 }
 
-function share(platform) {
-    const resultDiv = document.getElementById('result');
-    const textToShare = encodeURIComponent(resultDiv.innerText);
-
-    if (platform === 'twitter') {
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${textToShare}`;
-        window.open(twitterUrl, '_blank');
-    } else if (platform === 'whatsapp') {
-        const whatsappUrl = `https://api.whatsapp.com/send?text=${textToShare}`;
-        window.open(whatsappUrl, '_blank');
-    }
-}
-
-
-
-function displayFeaturedWords() {
+function displayFeaturedWords(terms) {
     const featuredWordsDiv = document.getElementById('featured-words');
-    const words = Object.keys(dictionary);
-    const numFeatured = 2; // Number of featured words to display
+    const arrThree = ['featured_one', 'featured_two', 'featured_three'];
 
-    // Shuffle the words array
-    for (let i = words.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [words[i], words[j]] = [words[j], words[i]];
-    }
+    arrThree.forEach(item => {
+        const randoNum = Math.floor(Math.random() * terms.length);
+        const term = terms[randoNum];
 
-    // Display the first numFeatured words
-    for (let i = 0; i < numFeatured && i < words.length; i++) {
-        const word = words[i];
-        const entry = dictionary[word];
+        const {
+            term_name,
+            definition,
+            example
+        } = term
 
         const featuredWordDiv = document.createElement('div');
         featuredWordDiv.classList.add('featured-word');
-        featuredWordDiv.innerHTML = `<strong>${word}:</strong> ${entry.definition}  <b>Example:</b> ${entry.example}`;
+        featuredWordDiv.innerHTML = `<strong>${term_name}:</strong> ${definition}  <b>Example:</b> ${example}`;
         featuredWordsDiv.appendChild(featuredWordDiv);
-    }
+    });
 }
 
-// Call the function to display the featured words
-displayFeaturedWords();
+function getTerms() {
+    return fetch('http://localhost:8000/api/terms', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then(res => res.json()).then(data => {
+        const terms = data.terms;
+        displayAword(terms)
+        displayFeaturedWords(terms);
+    });
+  }
 
+ function displayAword(terms) {
+    const randoNum = Math.floor(Math.random() * terms.length);
+    const term = terms[randoNum];
+    return displayToResult(term);
+ }
 
-function displayRandomWord() {
-    const words = Object.keys(dictionary);
-    const randomIndex = Math.floor(Math.random() * words.length);
-    const randomWord = words[randomIndex];
-    const entry = dictionary[randomWord];
+ function displayToResult(term) {
     const resultDiv = document.getElementById('result');
 
-    resultDiv.innerHTML = `<p style="font-size: 24px;"><strong>${randomWord}</strong></p> <br> <i>${entry.definition}</i> <br><br><strong>Use in a sentence:</strong> ${entry.example}`;
-}
+    const {
+        term_name,
+        definition,
+        example
+    } = term
+
+    resultDiv.innerHTML = `<p style="font-size: 24px;"><strong>${term_name}</strong></p> <br> <i>${definition}</i> <br><br><strong>Use in a sentence:</strong> ${example}`;
+ }
+  
+
 async function downloadAndShare() {
     const resultDiv = document.getElementById('result');
     const offscreenDiv = document.createElement('div');
@@ -209,33 +229,3 @@ async function downloadAndShare() {
         alert('Sharing is not supported on this browser.');
     }
 }
-
-function showPopup(message, isSuccess = true) {
-    const popup = document.createElement('div');
-    popup.textContent = message;
-    popup.classList.add('popup');
-    popup.style.position = 'fixed';
-    popup.style.top = '60px';
-    popup.style.left = '50%';
-    popup.style.transform = 'translateX(-50%)';
-    popup.style.backgroundColor = isSuccess ? '#28a745' : '#dc3545';
-    popup.style.color = '#ffffff';
-    popup.style.padding = '10px';
-    popup.style.borderRadius = '4px';
-    popup.style.zIndex = '1000';
-    popup.style.fontSize = '14px';
-    popup.style.textAlign = 'center';
-    popup.style.animation = 'fadeout 4s forwards';
-    popup.style.animationDelay = '2s';
-
-    document.body.appendChild(popup);
-
-    setTimeout(() => {
-        document.body.removeChild(popup);
-    }, 6000);
-}
-
-
-// Add this line at the end of the script.js file
-displayRandomWord();
-
