@@ -7,6 +7,8 @@ const app = express();
 
 const post_term = require('./post_term');
 const get_terms = require('./get_terms');
+const get_term = require('./get_term');
+const get_term_byname = require('./get_term_byname');
 
 app.use(bodyParser.json());
 app.use(cors({
@@ -22,8 +24,10 @@ app.get('/', (req, res) => {
 
 app.use('/api', post_term);
 app.use('/api', get_terms);
+app.use('/api', get_term);
+app.use('/api', get_term_byname);
 
-app.listen(3000, () => {
+app.listen(8000, () => {
     mongooseDB.connect('mongodb+srv://sampelumibiz:uRRpeKcqAbi8rrTd@cluster0.ot6j04n.mongodb.net/?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
