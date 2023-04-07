@@ -6,6 +6,8 @@ const { primaryApi } = url;
 
 import showPopup from './showPopup';
 
+import dictionary from './dictionary';
+
 document.getElementById('shareToTwitter').addEventListener('click', function() {
     const resultDiv = document.getElementById('result');
     const textToShare = resultDiv.innerText;
@@ -46,6 +48,27 @@ function searchWord(word = null) {
             return response.json();
         })
         .then((results) => {
+
+            if (results.filter(item => item.term_name === word).length === 0) {
+                const relatedWords = findRelatedWords(word);
+                if (relatedWords.length > 0) {
+                    resultDiv.innerHTML = `<strong>${word}:</strong> not found in the dictionary.<br><strong>Did you mean:</strong>`;
+                    relatedWords.forEach((relatedWord) => {
+                    const relatedWordElement = document.createElement('span');
+                    relatedWordElement.textContent = relatedWord;
+                    relatedWordElement.classList.add('related-word');
+                    relatedWordElement.addEventListener('click', () => searchWord(relatedWord));
+                            resultDiv.appendChild(relatedWordElement);
+                    });
+                        showPopup(`"${word}" not found in the dictionary. but see related words`, false);
+                    } else {
+                        resultDiv.innerHTML = `<strong>${word}:</strong> not found in the dictionary.`;
+                            showPopup(`"${word}" not found in the dictionary.`, false);
+                        }
+
+                        return;
+            }
+
             console.log('Search results:', results);
             const foundTerm = results.filter(item => item.term_name === word)[0];
             displayToResult(foundTerm);
@@ -177,4 +200,24 @@ async function downloadAndShare() {
     } else {
         alert('Sharing is not supported on this browser.');
     }
+}
+
+function findRelatedWords(searchedWord) {
+    const words = Object.keys(dictionary);
+    const maxDifference = 1; // Maximum difference in characters allowed
+    const relatedWords = [];
+
+    words.forEach(word => {
+        let diff = 0;
+        for (let i = 0; i < Math.min(word.length, searchedWord.length); i++) {
+            if (word[i] !== searchedWord[i]) {
+                diff++;
+                if (diff > maxDifference) break;
+            }
+        }
+
+        if (diff <= maxDifference) relatedWords.push(word);
+    });
+
+    return relatedWords;
 }
