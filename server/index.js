@@ -13,8 +13,8 @@ const post_term_vet = require('./post_term_vet');
 
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://naijapedia.net',
-  methods: ['GET']
+  origin: 'https://naijapedia.net',
+  methods: ['GET', 'POST']
 }));
 
 const mongooseDB = require('./mongoose');

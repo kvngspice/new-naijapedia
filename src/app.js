@@ -2,7 +2,9 @@ import './style.css'
 
 import url from './url';
 
-const { primaryApi } = url
+const { primaryApi } = url;
+
+import showPopup from './showPopup';
 
 document.getElementById('shareToTwitter').addEventListener('click', function() {
     const resultDiv = document.getElementById('result');
@@ -47,6 +49,7 @@ function searchWord(word = null) {
             console.log('Search results:', results);
             const foundTerm = results.filter(item => item.term_name === word)[0];
             displayToResult(foundTerm);
+            showPopup('word found', true)
             document.getElementById('search').value = ``;
 
         })
