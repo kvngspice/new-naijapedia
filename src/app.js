@@ -48,11 +48,11 @@ function searchWord(word = null) {
             return response.json();
         })
         .then((results) => {
-
+            const resultDiv = document.getElementById('result');
+            
             if (results.filter(item => item.term_name === word).length === 0) {
                 const relatedWords = findRelatedWords(word);
                 if (relatedWords.length > 0) {
-                    const resultDiv = document.getElementById('result');
                     resultDiv.innerHTML = `<strong>${word}:</strong> not found in the dictionary.<br><strong>Did you mean:</strong>`;
                     relatedWords.forEach((relatedWord) => {
                     const relatedWordElement = document.createElement('span');
