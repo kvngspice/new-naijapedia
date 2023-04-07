@@ -8,12 +8,12 @@ const app = express();
 const post_term = require('./post_term');
 const get_terms = require('./get_terms');
 const get_term = require('./get_term');
-const get_term_byname = require('./get_term_byname');
+const search_term = require('./search_term');
 const post_term_vet = require('./post_term_vet');
 
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://192.168.8.102:8080',
+  origin: 'http://localhost:8080',
   methods: ['GET']
 }));
 
@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 app.use('/api', post_term);
 app.use('/api', get_terms);
 app.use('/api', get_term);
-app.use('/api', get_term_byname);
+app.use('/api', search_term);
 app.use('/api', post_term_vet);
 
 app.listen(8000, () => {

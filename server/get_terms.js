@@ -6,7 +6,7 @@ router.get('/terms', async (req, res) => {
     try {
         Term.find()
             .then((terms) => {
-                console.log('All the terms:', terms);
+                //console.log('All the terms:', terms);
                 res.status(200).send({
                     terms
                 })

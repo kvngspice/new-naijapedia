@@ -1,5 +1,9 @@
 import showPopup from './showPopup';
 
+import url from './url';
+
+const { primaryApi } = url
+
 const wordInput = document.getElementById('word');
 const definitionInput = document.getElementById('definition');
 const useInSentInput = document.getElementById('use-in-sentence');
@@ -18,7 +22,7 @@ function addDefinition() {
 }
 
 function addTerm(newTerm) {
-    return fetch('http://localhost:8000/api/terms/vet', {
+    return fetch(`${primaryApi}api/terms/vet`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -1,7 +1,8 @@
 import './style.css'
 
-import dictionary from './dictionary';
-import showPopup from './showPopup';
+import url from './url';
+
+const { primaryApi } = url
 
 document.getElementById('shareToTwitter').addEventListener('click', function() {
     const resultDiv = document.getElementById('result');
@@ -16,98 +17,43 @@ document.getElementById('download-share').addEventListener('click', () => {
     downloadAndShare();
 });
 
-function addWord() {
-
-}
- 
-/*Object.keys(dictionary).forEach((key, index) => {
-    console.log(`${key} is at index ${index}`);
-
-    console.log(key)
-    fetch('http://localhost:3000/api/terms', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        term_name: `${Object.keys(dictionary)[index]}`,
-        definition: `${dictionary[key]['definition']}`,
-        example: `${dictionary[key]['example']}`
-      }),
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Failed to create term');
-      }
-    })
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-});*/
+document.getElementById('searchBtn').addEventListener('click', function() {
+    const word = document.getElementById('search').value;
+    searchWord(word);
+});
 
 
+document.getElementById('search').addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const word = event.target.value.trim();
+        searchWord(word);
+    }
+});
 
-  document.getElementById('search').addEventListener('keydown', function (event) {
-                                                        if (event.key === 'Enter') {
-                                                            event.preventDefault();
-                                                            const word = event.target.value.trim();
-                                                            searchWord(word);
-                                                        }
-                                                    });
-                                                function searchWord(word = null) {
-                                                    const searchInput = document.getElementById('search');
-                                                    const resultDiv = document.getElementById('result');
-                                                    const searchedWord = word || searchInput.value.toLowerCase();
-                                                    const entry = dictionary[searchedWord];
-                                                  
                                                 
-                                                    if (entry) {
-                                                        resultDiv.innerHTML = `<p style="font-size: 24px;"><strong>${searchedWord}</strong> </p><br> <i>${entry.definition}</i><br><br><strong>Use in a sentence:</strong> ${entry.example}`;
-                                                        showPopup(`"${searchedWord}" found!`, true);
-                                                    } else {
-                                                        const relatedWords = findRelatedWords(searchedWord);
-                                                        if (relatedWords.length > 0) {
-                                                            resultDiv.innerHTML = `<strong>${searchedWord}:</strong> not found in the dictionary.<br><strong>Did you mean:</strong>`;
-                                                            relatedWords.forEach((relatedWord) => {
-                                                                const relatedWordElement = document.createElement('span');
-                                                                relatedWordElement.textContent = relatedWord;
-                                                                relatedWordElement.classList.add('related-word');
-                                                                relatedWordElement.addEventListener('click', () => searchWord(relatedWord));
-                                                                resultDiv.appendChild(relatedWordElement);
-                                                            });
-                                                            showPopup(`"${searchedWord}" not found in the dictionary. but see related words`, false);
-                                                        } else {
-                                                            resultDiv.innerHTML = `<strong>${searchedWord}:</strong> not found in the dictionary.`;
-                                                            showPopup(`"${searchedWord}" not found in the dictionary.`, false);
-                                                        }
-                                                    }
-                                                }
-                                                
+function searchWord(word = null) {
+    const encodedPhrase = encodeURIComponent(word);
+    const url = `${primaryApi}api/search?phrase=${encodedPhrase}`;
 
-
-function findRelatedWords(searchedWord) {
-    const words = Object.keys(dictionary);
-    const maxDifference = 1; // Maximum difference in characters allowed
-    const relatedWords = [];
-
-    words.forEach(word => {
-        let diff = 0;
-        for (let i = 0; i < Math.min(word.length, searchedWord.length); i++) {
-            if (word[i] !== searchedWord[i]) {
-                diff++;
-                if (diff > maxDifference) break;
+    fetch(url)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error ${response.status}`);
             }
-        }
+            return response.json();
+        })
+        .then((results) => {
+            console.log('Search results:', results);
+            const foundTerm = results.filter(item => item.term_name === word)[0];
+            displayToResult(foundTerm);
+            document.getElementById('search').value = ``;
 
-        if (diff <= maxDifference) relatedWords.push(word);
-    });
+        })
+        .catch((error) => {
+            console.error('Error fetching search results:', error.message);
+        });
 
-    return relatedWords;
 }
 
 function displayFeaturedWords(terms) {
@@ -132,7 +78,7 @@ function displayFeaturedWords(terms) {
 }
 
 function getTerms() {
-    return fetch('http://localhost:8000/api/terms', {
+    return fetch(`${primaryApi}api/terms`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
