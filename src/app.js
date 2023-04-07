@@ -22,7 +22,7 @@ document.getElementById('download-share').addEventListener('click', () => {
 });
 
 document.getElementById('searchBtn').addEventListener('click', function() {
-    const word = document.getElementById('search').value;
+    const word = document.getElementById('search').value.toLowerCase().trim();
     searchWord(word);
 });
 
@@ -30,7 +30,7 @@ document.getElementById('searchBtn').addEventListener('click', function() {
 document.getElementById('search').addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
         event.preventDefault();
-        const word = event.target.value.trim();
+        const word = event.target.value.toLowerCase().trim();
         searchWord(word);
     }
 });

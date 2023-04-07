@@ -20,7 +20,7 @@ function showPopup(message, isSuccess = true) {
 
     setTimeout(() => {
         document.body.removeChild(popup);
-        window.location.href = '/index.html';
+        //window.location.href = '/index.html';
     }, 6000);
 }
 
