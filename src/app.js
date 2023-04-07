@@ -52,6 +52,7 @@ function searchWord(word = null) {
             if (results.filter(item => item.term_name === word).length === 0) {
                 const relatedWords = findRelatedWords(word);
                 if (relatedWords.length > 0) {
+                    const resultDiv = document.getElementById('result');
                     resultDiv.innerHTML = `<strong>${word}:</strong> not found in the dictionary.<br><strong>Did you mean:</strong>`;
                     relatedWords.forEach((relatedWord) => {
                     const relatedWordElement = document.createElement('span');
