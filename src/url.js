@@ -1,3 +1,3 @@
-const primaryApi = 'http://localhost:8000/'
+const primaryApi = 'https://naija-pedia.herokuapp.com/';
 
 export default { primaryApi };

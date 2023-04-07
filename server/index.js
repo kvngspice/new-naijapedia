@@ -13,7 +13,7 @@ const post_term_vet = require('./post_term_vet');
 
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://localhost:8080',
+  origin: 'http://naijapedia.net',
   methods: ['GET']
 }));
 
@@ -29,7 +29,9 @@ app.use('/api', get_term);
 app.use('/api', search_term);
 app.use('/api', post_term_vet);
 
-app.listen(8000, () => {
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
     mongooseDB.connect('mongodb+srv://sampelumibiz:uRRpeKcqAbi8rrTd@cluster0.ot6j04n.mongodb.net/?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -40,7 +42,7 @@ app.listen(8000, () => {
     }).catch((err) => {
     console.error('Error connecting to MongoDB database', err);
     });
-      
-    console.log('Server started on port 8000');
+    
+    console.log(`Server started on port ${3000}`);
 });
 
